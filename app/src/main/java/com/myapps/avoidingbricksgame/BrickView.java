@@ -9,16 +9,19 @@ import static android.graphics.Color.rgb;
 
 
 public class BrickView extends View {
-    public ObjectAnimator animation;
+
+    public static long DUR = 6000;
+    private ObjectAnimator brickAnimation;
     public BrickView(Context c) {
         super(c);
 
         setMeasuredDimension(1, 1);
         this.setBackgroundColor(rgb(0,0,255));
 
-        animation = ObjectAnimator.ofFloat
+        brickAnimation = ObjectAnimator.ofFloat
                 (this, "Y", -80f, 2000f);
-        animation.setDuration(6000);
+        brickAnimation.setDuration(DUR);
+
     }
 
     @Override
@@ -60,5 +63,9 @@ public class BrickView extends View {
 
         //MUST CALL THIS
         setMeasuredDimension(width, height);
+    }
+
+    public ObjectAnimator getBrickAnimation() {
+        return brickAnimation;
     }
 }

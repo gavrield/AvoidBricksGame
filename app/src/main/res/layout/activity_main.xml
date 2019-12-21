@@ -27,11 +27,12 @@
             <View
                 android:id="@+id/leftpos"
                 android:layout_below="@id/top1"
-                android:layout_width="match_parent"
+                android:layout_width="110dp"
                 android:layout_height="64dp"
                 android:layout_row="1"
                 android:layout_column="0"
                 android:background="#FFFFFF"
+                android:layout_margin="10dp"
                 android:clickable="true"
                 android:visibility="visible"></View>
         </RelativeLayout>
@@ -50,11 +51,12 @@
             <View
                 android:id="@+id/middlepos"
                 android:layout_below="@id/top2"
-                android:layout_width="match_parent"
+                android:layout_width="110dp"
                 android:layout_height="70dp"
                 android:layout_row="1"
                 android:layout_column="0"
                 android:clickable="true"
+                android:layout_margin="10dp"
                 android:background="@color/colorPrimary"
                 android:visibility="visible">
             </View>
@@ -74,11 +76,12 @@
             <View
                 android:id="@+id/rightpos"
                 android:layout_below="@id/top3"
-                android:layout_width="match_parent"
+                android:layout_width="110dp"
                 android:layout_height="70dp"
                 android:layout_row="1"
                 android:layout_column="0"
                 android:background="#FFFFFF"
+                android:layout_margin="10dp"
                 android:clickable="true"
                 android:visibility="visible">
             </View>
@@ -112,6 +115,10 @@
             android:background="#FF0000"
             android:layout_margin="25dp"
             android:clickable="false"></View>
+        <Chronometer
+            android:id="@+id/chrono"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
 
     </LinearLayout>
 
