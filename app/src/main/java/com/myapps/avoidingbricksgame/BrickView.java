@@ -8,15 +8,15 @@ import android.view.View;
 import static android.graphics.Color.rgb;
 
 
-public class BrickView extends View {
+public class BrickView extends View implements ChangeListener{
 
     public static long DUR = 6000;
+    private ChangeListener changeListener;
     private ObjectAnimator brickAnimation;
     public BrickView(Context c) {
         super(c);
-
         setMeasuredDimension(1, 1);
-        this.setBackgroundColor(rgb(0,0,255));
+        this.setBackgroundColor(rgb(128,0,0));
 
         brickAnimation = ObjectAnimator.ofFloat
                 (this, "Y", -80f, 2000f);
@@ -67,5 +67,14 @@ public class BrickView extends View {
 
     public ObjectAnimator getBrickAnimation() {
         return brickAnimation;
+    }
+
+    @Override
+    public void stateChanged(LivesEvent e) {
+        if (e.getNumLivesChange() == 0){
+            this.setVisibility(INVISIBLE);
+        }
+
+
     }
 }

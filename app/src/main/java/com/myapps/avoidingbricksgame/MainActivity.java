@@ -10,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.SystemClock;
 import android.view.View;
 
 import android.widget.Chronometer;
@@ -31,7 +33,12 @@ public class MainActivity
     private Drawable invisible = new ColorDrawable(0);
     private Lives lives;
     private Chronometer time;
-    final Handler HANDLER = new Handler();
+    //HandlerThread handlerThread = new HandlerThread("backgroundThread");
+    private Handler handler;
+
+    public MainActivity() {
+        handler = new Handler();
+    }
 
 
     @Override
@@ -45,7 +52,7 @@ public class MainActivity
         hearts[0] = findViewById(R.id.leftlife);
         hearts[1] = findViewById(R.id.middlelife);
         hearts[2] = findViewById(R.id.rightlife);
-
+        time = findViewById(R.id.chrono);
        initNewGame();
     }
 
@@ -63,7 +70,7 @@ public class MainActivity
     private void initNewGame(){
         lives = new Lives();
         lives.subscribe(this);
-        time = findViewById(R.id.chrono);
+
         flags[COLS/2 + 1] = true;
 
         for (int i = 0; i < COLS; i++)
@@ -71,8 +78,26 @@ public class MainActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             visible = new ColorDrawable(getColor(R.color.colorPrimary));
         }
+        time.setBase(SystemClock.elapsedRealtime());
         time.refreshDrawableState();
         time.start();
+//        handlerThread.start();
+//        Handler handler2 = new Handler(handlerThread.getLooper());
+//
+//        handler2.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                while(lives.getNumLives() > 0){
+//                    try {
+//                        Thread.sleep(ELAPSED);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                gen();
+//            }
+//        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -82,7 +107,7 @@ public class MainActivity
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    HANDLER.post(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             gen();
@@ -96,7 +121,7 @@ public class MainActivity
         final BrickView brick = new BrickView(this);
         RelativeLayout box;
         final int rand  = (int)(Math.random()*(3) + 1); // random number between 1-3
-        final Handler h2 = new Handler();
+        //final Handler h2 = new Handler();
         switch (rand) {
             case 1:
                 box =  findViewById(R.id.box1);
@@ -113,6 +138,7 @@ public class MainActivity
                 default:
                     break;
         }
+        lives.subscribe(brick);
         final View p = player[rand - 1];
         brick.getBrickAnimation().start();
         new Thread(new Runnable() {
@@ -126,13 +152,12 @@ public class MainActivity
                 }
                 b = p.getTop() >= brick.getBottom();
                 if (b && flags[rand - 1]) {
-                        h2.post(new Runnable() {
+                        handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 lives.setNumLives(lives.getNumLives() - 1);
                             }
                         });
-
                 }
 
             }
