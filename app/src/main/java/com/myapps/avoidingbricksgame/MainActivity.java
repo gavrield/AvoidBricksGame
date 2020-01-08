@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
@@ -16,6 +17,8 @@ import android.view.View;
 
 import android.widget.Chronometer;
 import android.widget.RelativeLayout;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 
@@ -25,19 +28,32 @@ public class MainActivity
         implements View.OnClickListener, ChangeListener{
 
     private final int ELAPSED = 2000;
-    private final int COLS = 3;
-    private boolean[] flags = new boolean[COLS];
-    private View[] hearts = new View[3];
+    private final int COLS = 5;
+    private final int MAX_THREADS = 12;
+    private boolean[] flags;
+    private View[] hearts;
     private View[] player;
+    private RelativeLayout[] boxes;
     private Drawable visible;
-    private Drawable invisible = new ColorDrawable(0);
+    private Drawable invisible;
     private Lives lives;
     private Chronometer time;
     //HandlerThread handlerThread = new HandlerThread("backgroundThread");
     private Handler handler;
+    private boolean semaphore;
+    private ExecutorService pool;
+    private ScorsDbHelper dbHelper;
 
     public MainActivity() {
         handler = new Handler();
+        player = new View[COLS];
+        boxes = new RelativeLayout[COLS];
+        hearts = new View[Lives.getInitLives()];
+        flags = new boolean[COLS];
+        invisible = new ColorDrawable(0);
+        semaphore = false;
+        pool = Executors.newFixedThreadPool(MAX_THREADS);
+        dbHelper = new ScorsDbHelper(this);
     }
 
 
@@ -45,25 +61,39 @@ public class MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        player = new View[COLS];
-        player[0] = findViewById(R.id.leftpos);
-        player[1] = findViewById(R.id.middlepos);
-        player[2] = findViewById(R.id.rightpos);
+
+        player[0] = findViewById(R.id.mostleftpos);
+        player[1] = findViewById(R.id.leftpos);
+        player[2] = findViewById(R.id.middlepos);
+        player[3] = findViewById(R.id.rightpos);
+        player[4] = findViewById(R.id.mostrightpos);
+
+
+        boxes[0] = findViewById(R.id.box1);
+        boxes[1] = findViewById(R.id.box2);
+        boxes[2] = findViewById(R.id.box3);
+        boxes[3] = findViewById(R.id.box4);
+        boxes[4] = findViewById(R.id.box5);
+
         hearts[0] = findViewById(R.id.leftlife);
         hearts[1] = findViewById(R.id.middlelife);
         hearts[2] = findViewById(R.id.rightlife);
+
         time = findViewById(R.id.chrono);
-       initNewGame();
+
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        initNewGame();
+    }
 
     @Override
     protected void onRestart(){
         super.onRestart();
         for (View heart: hearts) heart.setBackgroundResource(R.drawable.full);
-        invisible();
-        player[COLS/2 + 1].setBackground(visible);
-        flags[COLS/2 + 1] = true;
+        player[COLS/2 ].setBackground(visible);
         initNewGame();
     }
 
@@ -71,32 +101,17 @@ public class MainActivity
         lives = new Lives();
         lives.subscribe(this);
 
-        flags[COLS/2 + 1] = true;
-
-        for (int i = 0; i < COLS; i++)
+        for (int i = 0; i < COLS; i++){
+            flags[i] = i == COLS/2; // flags[COLS/2 + 1] = true else flags[i] = false
             player[i].setOnClickListener(this);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             visible = new ColorDrawable(getColor(R.color.colorPrimary));
         }
         time.setBase(SystemClock.elapsedRealtime());
         time.refreshDrawableState();
         time.start();
-//        handlerThread.start();
-//        Handler handler2 = new Handler(handlerThread.getLooper());
-//
-//        handler2.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                while(lives.getNumLives() > 0){
-//                    try {
-//                        Thread.sleep(ELAPSED);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                gen();
-//            }
-//        });
 
         new Thread(new Runnable() {
             @Override
@@ -119,29 +134,14 @@ public class MainActivity
     }
     private void gen(){
         final BrickView brick = new BrickView(this);
-        RelativeLayout box;
-        final int rand  = (int)(Math.random()*(3) + 1); // random number between 1-3
+
+        final int rand  = (int)(Math.random()*(COLS)); // random number between 1-3
         //final Handler h2 = new Handler();
-        switch (rand) {
-            case 1:
-                box =  findViewById(R.id.box1);
-                box.addView(brick);
-                break;
-            case 2:
-                box =  findViewById(R.id.box2);
-                box.addView(brick);
-                break;
-            case 3:
-                box =  findViewById(R.id.box3);
-                box.addView(brick);
-                break;
-                default:
-                    break;
-        }
+        boxes[rand].addView(brick);
         lives.subscribe(brick);
-        final View p = player[rand - 1];
+        final View p = player[rand];
         brick.getBrickAnimation().start();
-        new Thread(new Runnable() {
+        pool.execute(new Runnable() {
             @Override
             public void run() {
                 boolean b;
@@ -151,17 +151,43 @@ public class MainActivity
                     e.printStackTrace();
                 }
                 b = p.getTop() >= brick.getBottom();
-                if (b && flags[rand - 1]) {
+                if (b && flags[rand] && !semaphore) {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 lives.setNumLives(lives.getNumLives() - 1);
+                                semaphore = true;
                             }
                         });
+                    for(int i = 0; i < 10; i++)
+                    {
+
+                        if (i % 2 == 0)
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    p.setBackground(invisible);
+                                }
+                            });
+
+                        else
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    p.setBackground(visible);
+                                }
+                            });
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    semaphore = false;
                 }
 
             }
-        }).start();
+        });
     }
 
     public void invisible(){
@@ -173,11 +199,14 @@ public class MainActivity
     }
     @Override
     public void onClick(View v) {
-        invisible();
-        v.setBackground(visible);
-        for (int i = 0; i < COLS; i++)
-            if (v == player[i])
-                flags[i] = true;
+        if (!semaphore){
+            invisible();
+            v.setBackground(visible);
+            for (int i = 0; i < COLS; i++)
+                if (v == player[i])
+                    flags[i] = true;
+        }
+
     }
 
     @Override
@@ -185,6 +214,9 @@ public class MainActivity
         hearts[e.getNumLivesChange()].setBackgroundResource(R.drawable.border);
         if (e.getNumLivesChange() == 0){
             time.stop();
+            try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+            }
+
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder
                     .setTitle(R.string.game_over)
@@ -196,6 +228,7 @@ public class MainActivity
                     .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            pool.shutdown();
                             finish();
                         }
                     })

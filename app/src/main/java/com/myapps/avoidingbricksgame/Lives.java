@@ -8,13 +8,18 @@ import java.util.ArrayList;
 public class Lives {
     private int numLives;
     private ArrayList<ChangeListener> listenerList = new ArrayList<>();
+    private static final int INIT_LIVES = 3;
 
     public int getNumLives() {
         return numLives;
     }
 
     public  Lives(){
-        numLives = 3;
+        numLives = INIT_LIVES;
+    }
+
+    public static int getInitLives() {
+        return INIT_LIVES;
     }
 
     public void setNumLives(int n){

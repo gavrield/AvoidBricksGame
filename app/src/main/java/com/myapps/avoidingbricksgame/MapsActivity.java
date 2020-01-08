@@ -3,6 +3,9 @@ package com.myapps.avoidingbricksgame;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,7 +16,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private  final int ROWS = 10;
     private GoogleMap mMap;
+    private TableLayout table;
+    private TableRow[] tableRows;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +29,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        table = (TableLayout)findViewById(R.id.table);
+        tableRows = new TableRow[ROWS];
+        for (int i = 0; i < ROWS; i++){
+            table.addView(tableRows[i]);
+        }
     }
 
 

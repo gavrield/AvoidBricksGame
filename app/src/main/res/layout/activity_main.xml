@@ -24,15 +24,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="430dp">
             </LinearLayout>
+
             <View
-                android:id="@+id/leftpos"
-                android:layout_below="@id/top1"
+                android:id="@+id/mostleftpos"
                 android:layout_width="110dp"
                 android:layout_height="64dp"
                 android:layout_row="1"
                 android:layout_column="0"
+                android:layout_below="@id/top1"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="#FFFFFF"
-                android:layout_margin="10dp"
                 android:clickable="true"
                 android:visibility="visible"></View>
         </RelativeLayout>
@@ -49,7 +52,7 @@
                 android:layout_height="430dp">
             </LinearLayout>
             <View
-                android:id="@+id/middlepos"
+                android:id="@+id/leftpos"
                 android:layout_below="@id/top2"
                 android:layout_width="110dp"
                 android:layout_height="70dp"
@@ -57,7 +60,7 @@
                 android:layout_column="0"
                 android:clickable="true"
                 android:layout_margin="10dp"
-                android:background="@color/colorPrimary"
+                android:background="#FFFFFF"
                 android:visibility="visible">
             </View>
         </RelativeLayout>
@@ -74,8 +77,58 @@
                 android:layout_height="430dp">
             </LinearLayout>
             <View
-                android:id="@+id/rightpos"
+                android:id="@+id/middlepos"
                 android:layout_below="@id/top3"
+                android:layout_width="110dp"
+                android:layout_height="70dp"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:background="@color/colorPrimary"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:visibility="visible">
+            </View>
+        </RelativeLayout>
+        <RelativeLayout
+            android:orientation="vertical"
+            android:id="@+id/box4"
+            android:layout_width="0dp"
+            android:layout_height ="match_parent"
+            android:layout_weight="1">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/top4"
+                android:layout_width="match_parent"
+                android:layout_height="430dp">
+            </LinearLayout>
+            <View
+                android:id="@+id/rightpos"
+                android:layout_below="@id/top4"
+                android:layout_width="110dp"
+                android:layout_height="70dp"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:background="#FFFFFF"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:visibility="visible">
+            </View>
+        </RelativeLayout>
+        <RelativeLayout
+            android:orientation="vertical"
+            android:id="@+id/box5"
+            android:layout_width="0dp"
+            android:layout_height ="match_parent"
+            android:layout_weight="1">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/top5"
+                android:layout_width="match_parent"
+                android:layout_height="430dp">
+            </LinearLayout>
+            <View
+                android:id="@+id/mostrightpos"
+                android:layout_below="@id/top5"
                 android:layout_width="110dp"
                 android:layout_height="70dp"
                 android:layout_row="1"
