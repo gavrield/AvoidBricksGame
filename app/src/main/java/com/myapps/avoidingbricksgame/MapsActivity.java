@@ -19,7 +19,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private  final int ROWS = 10;
     private GoogleMap mMap;
-    private TableLayout table;
     private TableRow[] tableRows;
     private TextView[] names;
     private TextView[] scores;
@@ -32,11 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        table = (TableLayout)findViewById(R.id.table);
         createArrays();
-        for (int i = 0; i < ROWS; i++){
-            table.addView(tableRows[i]);
-        }
     }
 
 
