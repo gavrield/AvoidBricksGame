@@ -40,7 +40,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row0"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/lightgrey">
             <TextView
                 android:text="1"
                 android:layout_column="0"/>
@@ -57,7 +58,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row1"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/palegreen">
             <TextView
                 android:text="2"
                 android:layout_column="0"/>
@@ -72,7 +74,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row2"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/lightgrey">
             <TextView
                 android:text="3" />
             <TextView
@@ -86,6 +89,7 @@
         </TableRow>
         <TableRow
             android:id="@+id/row3"
+            android:background="@color/palegreen"
             android:clickable="true">
             <TextView
                 android:text="4" />
@@ -100,7 +104,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row4"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/lightgrey">
             <TextView
                 android:text="5" />
             <TextView
@@ -114,7 +119,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row5"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/palegreen">
             <TextView
                 android:text="6" />
             <TextView
@@ -128,7 +134,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row6"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/lightgrey">
             <TextView
                 android:text="7" />
             <TextView
@@ -142,7 +149,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row7"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/palegreen">
             <TextView
                 android:text="8" />
             <TextView
@@ -156,7 +164,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row8"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/lightgrey">
             <TextView
                 android:text="9" />
             <TextView
@@ -170,7 +179,8 @@
         </TableRow>
         <TableRow
             android:id="@+id/row9"
-            android:clickable="true">
+            android:clickable="true"
+            android:background="@color/palegreen">
             <TextView
                 android:text="10" />
             <TextView
