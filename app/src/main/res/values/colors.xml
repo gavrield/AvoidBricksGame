@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="cyan">#E0FFFF</color>
-    <color name="palegreen">#98FB98</color>
-    <color name="lightgrey">#D3D3D3</color>
+    <color name="green">#8FBC8F</color>
+    <color name="grey">#D3D3D3</color>
 </resources>
