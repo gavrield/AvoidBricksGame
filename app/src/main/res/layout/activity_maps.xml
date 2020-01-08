@@ -23,13 +23,13 @@
                 android:layout_height="match_parent"
                 android:layout_column="0"
                 android:text="@string/place"
-                android:textColor="@color/white"
+                android:textColor="#FFFFFF"
                 />
             <TextView
                 android:text="@string/name"
                 android:layout_marginLeft="80dp"
                 android:layout_column="1"
-                android:textColor="@color/white"
+                android:textColor="#FFFFFF"
                 />
 
             <TextView
@@ -37,7 +37,7 @@
                 android:layout_marginLeft="80dp"
                 android:layout_column="2"
                 android:text="@string/score"
-                android:textColor="@color/white"
+                android:textColor="#FFFFFF"
                />
 
         </TableRow>
