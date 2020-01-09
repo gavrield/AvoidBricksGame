@@ -73,6 +73,7 @@ public class BrickView extends View implements ChangeListener{
     public void stateChanged(LivesEvent e) {
         if (e.getNumLivesChange() == 0){
             this.setVisibility(INVISIBLE);
+            this.getBrickAnimation().pause();
         }
 
 
